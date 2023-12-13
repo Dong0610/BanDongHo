@@ -1,0 +1,112 @@
+﻿using BanDongHo.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace BanDongHo.Areas.Admin.Models
+{
+	public class ProductService
+    {
+        BANDONGHOEntities db;
+        public ProductService()
+        {
+            db = new BANDONGHOEntities();
+        }
+       
+        public IEnumerable<SANPHAM> getAllProduct()
+        {          
+            return db.SANPHAM;
+        }
+
+        public int getTotalRecord()
+        {         
+            return (from sp in db.SANPHAMs orderby sp.MASP descending select sp).Count();
+        }
+
+        public SANPHAM getProductById(int masp)
+        {          
+            return db.SANPHAM.Find(masp);
+        }
+
+        public bool addProduct(SANPHAM sp)
+        {          
+            try
+            {
+                db.SANPHAM.Add(sp);
+                db.SaveChanges();
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+            
+        }
+
+        public bool updateProduct(SANPHAM sp)
+        {          
+            try
+            {
+                var result = db.SANPHAMs.Find(sp.MASP);
+                if(result != null)
+                {
+                    result.TENSP = sp.TENSP;
+                    result.SOLUONG = sp.SOLUONG;
+                    result.MATH = sp.MATH;
+                    result.MOTA = sp.MOTA;
+                    result.DONGIA = sp.DONGIA;
+                    result.MALOAISP = sp.MALOAISP;
+                    result.HINHLON = sp.HINHLON;
+                    result.HINHNHO = sp.HINHNHO;
+                    result.DANHGIA = sp.DANHGIA;
+                }
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool deleteProduct(int masp)
+        {        
+            try {
+                string query = "DELETE FROM CHITIETKM WHERE MASP = '" + masp + "'";
+                string query2 = "DELETE FROM CHITIETDONHANG WHERE MASP = '" + masp + "'";
+                string query3 = "DELETE FROM SANPHAM WHERE MASP = '" + masp + "'";
+               
+                db.Database.ExecuteSqlCommand(query);
+                db.Database.ExecuteSqlCommand(query2);
+                db.Database.ExecuteSqlCommand(query3);
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+            
+
+        }
+
+     
+        public IEnumerable<SANPHAM> loadProduct(int pageIndex, int pageSize)
+        {
+            IEnumerable<SANPHAM> ListProduct = null;
+                  
+            ListProduct = (from sp in db.SANPHAM orderby sp.MASP descending select sp).Skip((pageIndex - 1) * pageSize).Take(pageSize);
+
+            return ListProduct;
+        }
+
+        public IEnumerable<LOAISANPHAM> getLoaiSanPham()
+        {           
+            return db.LOAISANPHAM;
+        }
+
+        public IEnumerable<THUONGHIEU> getThuongHieu()
+        {            
+            return db.THUONGHIEU;
+        }
+    }
+}
