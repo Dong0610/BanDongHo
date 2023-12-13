@@ -344,6 +344,8 @@
     <Content Include="Content\css\memenu.css" />
     <Content Include="Content\css\style.css" />
     <Content Include="Content\Custom.css" />
+    <Content Include="Database\Database.sql" />
+    <Content Include="Database\img_db.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
